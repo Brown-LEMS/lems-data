@@ -16,7 +16,7 @@ class Dataset {
 public:
   virtual ~Dataset() = default;
   virtual const DatasetConfig& config() const = 0;
-  virtual const std::vector<Camera>& cameras() const = 0;
+  virtual const std::vector<CameraCalibration>& cameras() const = 0;
   virtual const std::optional<StereoCalibration>& stereo_calibration() const = 0;
   virtual std::unique_ptr<DatasetIterator> iterate() const = 0;
 };

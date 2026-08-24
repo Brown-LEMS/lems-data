@@ -1,5 +1,6 @@
 #pragma once
 #include "lems/data/types.hpp"
+#include <yaml-cpp/yaml.h>
 #include <filesystem>
 #include <string>
 #include <unordered_map>
@@ -12,7 +13,7 @@ struct DatasetConfig {
   std::string sequence;
   std::size_t skip_frames{0};
   std::int64_t sync_tolerance_ns{20'000'000};
-  std::vector<Camera> cameras;
+  std::vector<CameraCalibration> cameras;
   std::optional<StereoCalibration> stereo;
   std::optional<std::filesystem::path> ground_truth_path;
   std::unordered_map<std::string, std::string> options;
@@ -20,5 +21,7 @@ struct DatasetConfig {
 
 // Small, dependency-free YAML subset reader for the shipped flat configuration files.
 DatasetConfig load_config(const std::filesystem::path& path);
+DatasetConfig load_config(const YAML::Node& node,
+                          const std::filesystem::path& base = {});
 
 } // namespace lems::data
