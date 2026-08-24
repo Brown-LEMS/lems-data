@@ -1,0 +1,4 @@
+dataset_type: euroc
+dataset_dir: /path/to/EuRoC
+sequence_name: MH_01_easy
+sync_tolerance_ns: 20000000

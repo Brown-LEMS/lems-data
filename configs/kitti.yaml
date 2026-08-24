@@ -1,0 +1,4 @@
+dataset_type: kitti
+dataset_dir: /path/to/KITTI/odometry/dataset
+sequence_name: "00"
+skip_frames: 0

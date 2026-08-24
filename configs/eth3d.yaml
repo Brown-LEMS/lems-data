@@ -1,0 +1,4 @@
+dataset_type: eth3d
+dataset_dir: /path/to/ETH3D
+sequence_name: delivery_area
+skip_frames: 0
