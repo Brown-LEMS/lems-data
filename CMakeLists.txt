@@ -3,7 +3,7 @@ project(lems_data VERSION 0.1.0 LANGUAGES CXX)
 
 option(LEMS_DATA_BUILD_TESTS "Build tests" ON)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-find_package(OpenCV 3.4 REQUIRED COMPONENTS core imgcodecs)
+find_package(OpenCV REQUIRED COMPONENTS core imgcodecs)
 find_package(yaml-cpp REQUIRED)
 
 add_library(lems_data src/dataset.cpp src/config.cpp)
