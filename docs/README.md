@@ -48,20 +48,25 @@ index, and member coverage for `Edge`, `Frame`, `CameraCalibration`,
 `DatasetIterator`, and `Utility`. It intentionally validates generated HTML,
 not a separate hand-written header parser.
 
-## GitHub Pages prerequisites
+## GitHub Pages deployment
 
-No GitHub Pages workflow is currently checked in, so this checkout does not
-publish the documentation site. If a Pages workflow is added and approved,
-it must build and validate the site with the commands above, keep generated
-output in an ephemeral runner directory, and upload only the generated
-`html/` tree. Before the first deployment, an administrator must open
-**Settings → Pages** and set **Source** to **GitHub Actions**. A workflow
-cannot select or change that repository setting; without it, a build or
-artifact upload does not publish a Pages site. The repository's Actions policy
-must also allow the official Pages actions used by the workflow.
+`.github/workflows/docs.yml` builds and checks the site on pushes to `main` or
+`codex/cohesive-edge-library`, and on manual `workflow_dispatch`. It installs
+Doxygen on the hosted runner, writes generated files under the runner's
+ephemeral temporary directory, validates the generated HTML, and uploads only
+the generated `html/` tree through the official GitHub Pages artifact and
+deployment actions. No generated files are committed to this repository.
 
-GitHub Pages is publicly reachable by default. Making this repository private
-does **not** by itself make the Pages site private; do not publish sensitive
+Before the first deployment, an administrator must open **Settings → Pages**
+and set **Source** to **GitHub Actions**. The workflow does not select or
+change that repository setting; without it, a build or artifact upload does
+not publish a Pages site. The repository's Actions policy must also allow the
+official Pages actions named in the workflow. The deploy job uses the
+`github-pages` environment and requires the standard `pages: write` and
+`id-token: write` permissions.
+
+This documentation site is intentionally public. A private repository alone
+would not make a GitHub Pages site private, so do not publish sensitive
 content on that assumption. Private Pages visibility requires an eligible
 GitHub Enterprise Cloud organization with Pages access control enabled. If
 that access control is unavailable, treat every published page as public.
