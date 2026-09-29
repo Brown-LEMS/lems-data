@@ -11,6 +11,8 @@
   var THEME_KEY = "lems-data-docs-theme";
   var THEME_DARK = "dark";
   var THEME_LIGHT = "light";
+  var themeMenuObserver = null;
+  var themeMenuTimer = null;
 
   function forEachNode(nodes, callback) {
     Array.prototype.forEach.call(nodes, callback);
@@ -66,34 +68,76 @@
     updateThemeButton(theme);
   }
 
-  function addThemeToggle() {
-    if (document.getElementById("lems-theme-toggle")) {
-      return;
+  function isTag(node, tagName) {
+    return node && node.tagName && node.tagName.toLowerCase() === tagName;
+  }
+
+  function firstDirectList(node) {
+    if (!node) {
+      return null;
     }
 
-    var nav = document.getElementById("main-nav-wrapper");
-    var mainMenu = document.getElementById("main-menu");
-    var listHost = null;
-    if (!nav && mainMenu) {
-      if (mainMenu.tagName && mainMenu.tagName.toLowerCase() === "ul") {
-        listHost = mainMenu;
-      } else {
-        var childLists = mainMenu.children;
-        for (var childIndex = 0; childIndex < childLists.length; childIndex += 1) {
-          if (childLists[childIndex].tagName.toLowerCase() === "ul") {
-            listHost = childLists[childIndex];
-            break;
-          }
-        }
+    var children = node.children;
+    for (var childIndex = 0; childIndex < children.length; childIndex += 1) {
+      if (isTag(children[childIndex], "ul")) {
+        return children[childIndex];
       }
     }
-    nav = nav || listHost || document.getElementById("main-nav");
-    if (!nav) {
+    return null;
+  }
+
+  function findThemeHost() {
+    var mainMenu = document.getElementById("main-menu");
+    if (mainMenu) {
+      var menuList = isTag(mainMenu, "ul") ? mainMenu : firstDirectList(mainMenu);
+      return {
+        node: menuList || mainMenu,
+        list: Boolean(menuList)
+      };
+    }
+
+    // A project-level wrapper is already outside Doxygen's lazy #main-nav
+    // initialization, so it is safe to use immediately when present.
+    var wrapper = document.getElementById("main-nav-wrapper");
+    if (wrapper) {
+      return { node: wrapper, list: false };
+    }
+
+    // Doxygen 1.9 creates #main-nav empty, then appends its UL during
+    // initMenu. Never append to that empty element: initMenu promotes its
+    // first child to #main-menu, which would promote the theme controls.
+    var mainNav = document.getElementById("main-nav");
+    var navList = firstDirectList(mainNav);
+    return navList ? { node: navList, list: true } : null;
+  }
+
+  function stopThemeMenuWatch() {
+    if (themeMenuObserver) {
+      themeMenuObserver.disconnect();
+      themeMenuObserver = null;
+    }
+    if (themeMenuTimer) {
+      window.clearTimeout(themeMenuTimer);
+      themeMenuTimer = null;
+    }
+  }
+
+  function appendThemeToggle(hostInfo, fallback) {
+    if (!hostInfo || document.getElementById("lems-theme-toggle")) {
       return;
     }
 
-    var tools = document.createElement(listHost ? "li" : "div");
+    var tools = document.createElement(hostInfo.list ? "li" : "div");
     tools.className = "lems-nav-tools";
+
+    if (fallback) {
+      // Keep the control visible and readable if a generated menu is not
+      // available (for example, when Doxygen's menu script is blocked).
+      tools.style.display = "flex";
+      tools.style.justifyContent = "flex-end";
+      tools.style.padding = "0.4rem 2rem";
+      tools.style.backgroundColor = "var(--lems-nav)";
+    }
 
     var button = document.createElement("button");
     button.type = "button";
@@ -104,8 +148,56 @@
     });
 
     tools.appendChild(button);
-    nav.appendChild(tools);
+    hostInfo.node.appendChild(tools);
     updateThemeButton(document.documentElement.getAttribute("data-lems-theme") || systemTheme());
+  }
+
+  function addThemeToggle() {
+    if (document.getElementById("lems-theme-toggle")) {
+      return;
+    }
+
+    var hostInfo = findThemeHost();
+    if (hostInfo) {
+      appendThemeToggle(hostInfo, false);
+      return;
+    }
+
+    var mainNav = document.getElementById("main-nav");
+    if (!mainNav || themeMenuObserver || themeMenuTimer) {
+      return;
+    }
+
+    if (typeof MutationObserver === "function") {
+      themeMenuObserver = new MutationObserver(function () {
+        var readyHost = findThemeHost();
+        if (readyHost) {
+          stopThemeMenuWatch();
+          appendThemeToggle(readyHost, false);
+        }
+      });
+      themeMenuObserver.observe(mainNav, { childList: true });
+    }
+
+    // Do not leave an observer running forever. The fallback never touches
+    // #main-nav, so a late initMenu call cannot promote the theme controls.
+    themeMenuTimer = window.setTimeout(function () {
+      stopThemeMenuWatch();
+      if (document.getElementById("lems-theme-toggle")) {
+        return;
+      }
+
+      var lateHost = findThemeHost();
+      if (lateHost) {
+        appendThemeToggle(lateHost, false);
+        return;
+      }
+
+      var fallbackHost = document.getElementById("titlearea") || document.body;
+      if (fallbackHost) {
+        appendThemeToggle({ node: fallbackHost, list: false }, true);
+      }
+    }, 3000);
   }
 
   function addProjectIdentity() {

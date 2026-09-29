@@ -14,6 +14,7 @@ from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_DOXYGEN_VERSION = "1.18.0"
 
 REQUIRED_MEMBERS = {
     "Edge": ("location", "orientation", "frame_source", "index"),
@@ -35,6 +36,49 @@ class LinkParser(HTMLParser):
         for name, value in attrs:
             if name.lower() == "href" and value:
                 self.links.append(value)
+
+
+class AssetParser(HTMLParser):
+    """Collect local stylesheet and script references from a generated page.
+
+    Doxygen's navigation is assembled from a small set of CSS and JavaScript
+    files.  Checking those references separately from ordinary ``<a>`` links
+    catches a site that is technically full of HTML pages but loses its
+    navigation or styling when it is published below a project URL such as
+    ``/lems-data/``.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.assets: list[tuple[str, str]] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = {name.lower(): value for name, value in attrs}
+        tag = tag.lower()
+        if tag == "link":
+            rel = {part.lower() for part in (values.get("rel") or "").split()}
+            href = values.get("href")
+            if href and "stylesheet" in rel:
+                self.assets.append(("stylesheet", href))
+        elif tag == "script":
+            src = values.get("src")
+            if src:
+                self.assets.append(("script", src))
+
+
+class GeneratorParser(HTMLParser):
+    """Read the Doxygen generator marker from the document head."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.generator: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "meta":
+            return
+        values = {name.lower(): value for name, value in attrs}
+        if values.get("name", "").lower() == "generator":
+            self.generator = values.get("content")
 
 
 @dataclass
@@ -143,6 +187,52 @@ def _missing_links(html_root: Path) -> list[tuple[Path, str, Path]]:
     return missing
 
 
+def _missing_assets(html_root: Path) -> list[tuple[Path, str, str, Path | None]]:
+    """Find missing or project-subpath-incompatible page assets.
+
+    A reference beginning with ``/`` is rooted at the host domain and skips a
+    GitHub Pages project prefix (for example, ``/lems-data/``).  Relative
+    references are resolved from the page that contains them, including pages
+    in Doxygen's ``search/`` and other subdirectories.  External, data, and
+    fragment-only URLs are intentionally ignored.
+    """
+
+    missing: list[tuple[Path, str, str, Path | None]] = []
+    resolved_root = html_root.resolve()
+    for page in sorted(html_root.rglob("*.html")):
+        try:
+            parser = AssetParser()
+            parser.feed(page.read_text(encoding="utf-8", errors="replace"))
+        except OSError:
+            continue
+        for kind, reference in parser.assets:
+            parsed = urlsplit(reference)
+            if parsed.scheme or parsed.netloc or not parsed.path:
+                continue
+            path = unquote(parsed.path)
+            if path.startswith("/"):
+                missing.append((page, reference, f"root-relative {kind} URL", None))
+                continue
+            target = (page.parent / path).resolve()
+            try:
+                target.relative_to(resolved_root)
+            except ValueError:
+                missing.append((page, reference, f"{kind} escapes generated site", target))
+                continue
+            if not target.is_file():
+                missing.append((page, reference, f"missing {kind}", target))
+    return missing
+
+
+def _doxygen_version(index_text: str) -> str | None:
+    parser = GeneratorParser()
+    parser.feed(index_text)
+    if not parser.generator:
+        return None
+    match = re.match(r"Doxygen\s+(\S+)", parser.generator, re.I)
+    return match.group(1) if match else None
+
+
 def _check_homepage(index: Path) -> list[str]:
     """Enforce the small, intentionally stable landing-page structure."""
 
@@ -182,6 +272,11 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Check generated lems-data Doxygen HTML")
     parser.add_argument("--site", type=Path, default=default_site(), help="generated HTML directory")
     parser.add_argument("--max-errors", type=int, default=20, help="maximum broken links to print")
+    parser.add_argument(
+        "--expected-doxygen-version",
+        default=EXPECTED_DOXYGEN_VERSION,
+        help=f"required Doxygen version in the generated HTML (default: {EXPECTED_DOXYGEN_VERSION})",
+    )
     return parser.parse_args()
 
 
@@ -203,6 +298,14 @@ def main() -> int:
 
     failures: list[str] = []
     index_text = index.read_text(encoding="utf-8", errors="replace")
+    doxygen_version = _doxygen_version(index_text)
+    if doxygen_version is None:
+        failures.append("generated index does not identify its Doxygen version")
+    elif doxygen_version != args.expected_doxygen_version:
+        failures.append(
+            f"generated site uses Doxygen {doxygen_version}; "
+            f"expected Doxygen {args.expected_doxygen_version}"
+        )
     if re.search(r"<h[1-6][^>]*>\s*@ref\b", index_text):
         failures.append("landing page contains an unresolved @ref command inside HTML")
     failures.extend(_check_homepage(index))
@@ -227,6 +330,16 @@ def main() -> int:
     if missing_search_assets:
         failures.append("native Doxygen search index is missing: " + ", ".join(missing_search_assets))
 
+    missing_assets = _missing_assets(html_root)
+    if missing_assets:
+        failures.append(f"{len(missing_assets)} broken local stylesheet/script asset reference(s)")
+        for page, reference, reason, target in missing_assets[: max(0, args.max_errors)]:
+            destination = f" ({target})" if target is not None else ""
+            print(
+                f"asset issue: {page.relative_to(html_root)} -> {reference} ({reason}){destination}",
+                file=sys.stderr,
+            )
+
     broken = _missing_links(html_root)
     if broken:
         failures.append(f"{len(broken)} broken local HTML file link(s)")
@@ -239,7 +352,11 @@ def main() -> int:
             print(f"- {failure}", file=sys.stderr)
         return 1
 
-    print(f"documentation checks passed: {len(pages)} HTML pages, native search index, five API symbol/member surfaces, and no broken local HTML file links")
+    print(
+        f"documentation checks passed: {len(pages)} HTML pages, native search index, "
+        "stylesheet/script assets, five API symbol/member surfaces, and no broken "
+        "local HTML file links"
+    )
     return 0
 
 
