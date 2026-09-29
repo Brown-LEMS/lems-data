@@ -46,7 +46,8 @@ jobs:
         run: |
           set -euo pipefail
           actual="$($DOXYGEN --version)"
-          test "$actual" = "$DOXYGEN_VERSION"
+          actual_version="${actual%% *}"
+          test "$actual_version" = "$DOXYGEN_VERSION"
           echo "Using Doxygen $actual from $DOXYGEN"
 
       - name: Build documentation
