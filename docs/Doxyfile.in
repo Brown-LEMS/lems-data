@@ -1,0 +1,75 @@
+# Doxygen configuration for the lems-data API and migration guides.
+#
+# tools/build_docs.py substitutes the @...@ placeholders and runs Doxygen
+# without configuring or compiling the C++ library. Keep this file free of
+# host-specific paths so the same command works on local machines and in CI.
+
+PROJECT_NAME           = lems-data
+PROJECT_BRIEF          = "Shared dataset, camera, edge, and utility types for Brown-LEMS VO pipelines"
+PROJECT_NUMBER         = 0.2.0
+
+OUTPUT_DIRECTORY       = @OUTPUT_DIRECTORY@
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = @PROJECT_ROOT@
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_COLORSTYLE        = LIGHT
+HTML_DYNAMIC_MENUS     = YES
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+SEARCHENGINE           = YES
+SERVER_BASED_SEARCH    = NO
+HTML_EXTRA_STYLESHEET  = @HTML_EXTRA_STYLESHEET@
+HTML_EXTRA_FILES       = @HTML_EXTRA_FILES@
+
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+XML_PROGRAMLISTING     = NO
+
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_HTMLHELP      = NO
+GENERATE_DOCBOOK       = NO
+GENERATE_AUTOGEN_DEF   = NO
+
+INPUT                  = @INPUT@
+FILE_PATTERNS          = *.h *.hpp *.md *.dox
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = @MAINPAGE@
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+SHOW_INCLUDE_FILES     = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+REFERENCES_RELATION    = YES
+REFERENCED_BY_RELATION = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_NO_PARAMDOC       = NO
+WARN_LOGFILE           = @WARN_LOGFILE@
+
+# Parse declarations without requiring Eigen, OpenCV, yaml-cpp, or an
+# installed lems-data library. The public headers remain the source of truth.
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = NO
+SKIP_FUNCTION_MACROS   = YES
+CLANG_ASSISTED_PARSING = NO
+PREDEFINED             = EIGEN_MAKE_ALIGNED_OPERATOR_NEW= \
+                         CV_EXPORTS= \
+                         CV_EXPORTS_W= \
+                         CV_INLINE= \
+                         YAML_CPP_API=
+
+GROUP_NESTED_COMPOUNDS = YES
+GROUP_GRAPHS           = YES
+HAVE_DOT               = NO
+
+QUIET                  = NO
+WARNINGS               = YES

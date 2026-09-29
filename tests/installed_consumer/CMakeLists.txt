@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.16)
+project(lems_data_installed_consumer LANGUAGES CXX)
+
+find_package(lemsData CONFIG REQUIRED)
+
+add_executable(lems_data_installed_consumer main.cpp)
+target_compile_features(lems_data_installed_consumer PRIVATE cxx_std_17)
+target_link_libraries(lems_data_installed_consumer PRIVATE lems::vo_compat)
+
+add_executable(lems_data_installed_modern modern_main.cpp)
+target_compile_features(lems_data_installed_modern PRIVATE cxx_std_17)
+target_link_libraries(lems_data_installed_modern PRIVATE lems::data)
+
+add_executable(lems_data_installed_stereo stereo_main.cpp)
+target_compile_features(lems_data_installed_stereo PRIVATE cxx_std_17)
+target_link_libraries(lems_data_installed_stereo PRIVATE lems::stereo_compat)
+
+enable_testing()
+add_test(NAME installed_consumer_gpu COMMAND lems_data_installed_consumer)
+add_test(NAME installed_consumer_modern COMMAND lems_data_installed_modern)
+add_test(NAME installed_consumer_stereo COMMAND lems_data_installed_stereo)

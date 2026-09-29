@@ -4,3 +4,6 @@
 *.zip
 __pycache__/
 *.pyc
+# Local Doxygen output (the documented default is outside the checkout).
+docs/site/html/
+docs/site/xml/

@@ -12,10 +12,16 @@ jobs:
       - name: Install C++ dependencies
         run: sudo apt-get update && sudo apt-get install -y libeigen3-dev libopencv-dev libyaml-cpp-dev
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLEMS_DATA_BUILD_COMPAT=ON
       - name: Build
         run: cmake --build build --parallel 2
       - name: Test
         run: ctest --test-dir build --output-on-failure
+      - name: Install package
+        run: cmake --install build --prefix "$GITHUB_WORKSPACE/stage"
+      - name: Build installed consumer
+        run: cmake -S tests/installed_consumer -B build/installed-consumer -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/stage"
+      - name: Test installed consumer
+        run: cmake --build build/installed-consumer --parallel 2 && ctest --test-dir build/installed-consumer --output-on-failure
       - name: Check Python tools
         run: python3 -m py_compile tools/evaluate.py

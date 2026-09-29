@@ -1,0 +1,37 @@
+/**
+ * @defgroup datasets Dataset readers and iteration
+ * @brief Dataset configuration, built-in readers, frames, and iterators.
+ *
+ * The dataset API turns a native KITTI, EuRoC, or ETH3D layout into
+ * timestamped @ref lems::data::FrameSet values. It does not own a detector
+ * or a matching algorithm.
+ */
+
+/**
+ * @defgroup cameras Cameras, calibration, and poses
+ * @brief Eigen/OpenCV camera models and coordinate conventions.
+ */
+
+/**
+ * @defgroup edges Edge observations
+ * @brief Shared 2-D and 3-D edge records used by the detector boundary.
+ */
+
+/**
+ * @defgroup utilities Geometry, image, and matching utilities
+ * @brief Retained numerical helpers used by the VO pipelines.
+ */
+
+/**
+ * @defgroup pipeline Pipeline data records
+ * @brief Data-only grids, observers, clusters, and temporal match records.
+ */
+
+/**
+ * @defgroup compatibility Brown-LEMS compatibility adapters
+ * @brief Migration-facing adapters and profile boundaries.
+ *
+ * The compatibility headers live below @c compat/vo. They are intentionally
+ * separate from the modern @c lems::data API so that a target selects either
+ * the GPU/multinocular or the stereo profile explicitly.
+ */

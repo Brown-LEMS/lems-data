@@ -1,0 +1,1327 @@
+/*
+ * lems-data API reference theme
+ *
+ * This stylesheet deliberately layers over Doxygen's stock stylesheet.  Keep
+ * the generated navigation, search widgets, anchors, and member markup intact
+ * so the site remains a normal, linkable Doxygen reference.
+ */
+
+:root {
+  --lems-ink: #14253a;
+  --lems-ink-muted: #52657a;
+  --lems-navy: #102f50;
+  --lems-nav: #102f50;
+  --lems-navy-deep: #0b223a;
+  --lems-teal: #0b777b;
+  --lems-teal-dark: #075b61;
+  --lems-mint: #dff3f0;
+  --lems-canvas: #f4f8fa;
+  --lems-surface: #ffffff;
+  --lems-surface-raised: #f9fbfc;
+  --lems-code: #edf4f6;
+  --lems-rule: #d9e4eb;
+  --lems-rule-strong: #bfd0db;
+  --lems-focus: #f5b63f;
+  --lems-danger: #a63b45;
+  --lems-api-link: #3d578c;
+  --lems-api-link-hover: #334975;
+  --lems-shadow: 0 10px 26px rgba(16, 47, 80, 0.09);
+  --lems-radius: 7px;
+  --lems-content-width: 1180px;
+  color-scheme: light;
+}
+
+html[data-lems-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-lems-theme="dark"] {
+  --lems-ink: #e4edf4;
+  --lems-ink-muted: #a8bac8;
+  --lems-navy: #d5e9f4;
+  --lems-nav: #0e263f;
+  --lems-navy-deep: #081827;
+  --lems-teal: #5cc5c3;
+  --lems-teal-dark: #91e0db;
+  --lems-mint: #153c42;
+  --lems-canvas: #0b1621;
+  --lems-surface: #101f2c;
+  --lems-surface-raised: #152838;
+  --lems-code: #142b38;
+  --lems-rule: #2b4453;
+  --lems-rule-strong: #3d5c6c;
+  --lems-focus: #ffd166;
+  --lems-danger: #ff9da4;
+  --lems-api-link: var(--lems-teal);
+  --lems-api-link-hover: var(--lems-teal-dark);
+  --lems-shadow: 0 12px 30px rgba(0, 0, 0, 0.23);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-lems-theme="light"]) {
+    --lems-ink: #e4edf4;
+    --lems-ink-muted: #a8bac8;
+    --lems-navy: #d5e9f4;
+    --lems-nav: #0e263f;
+    --lems-navy-deep: #081827;
+    --lems-teal: #5cc5c3;
+    --lems-teal-dark: #91e0db;
+    --lems-mint: #153c42;
+    --lems-canvas: #0b1621;
+    --lems-surface: #101f2c;
+    --lems-surface-raised: #152838;
+    --lems-code: #142b38;
+    --lems-rule: #2b4453;
+    --lems-rule-strong: #3d5c6c;
+    --lems-focus: #ffd166;
+    --lems-danger: #ff9da4;
+    --lems-api-link: var(--lems-teal);
+    --lems-api-link-hover: var(--lems-teal-dark);
+    --lems-shadow: 0 12px 30px rgba(0, 0, 0, 0.23);
+    color-scheme: dark;
+  }
+}
+
+/* Doxygen 1.18 emits its surfaces through custom properties.  Bridge those
+ * properties to the theme above so generated headers, nav trees, member
+ * tables, footers, search results, and code fragments follow our palette too.
+ * The important flag also wins if the generated stylesheet is loaded later. */
+:root {
+  --page-background-color: var(--lems-canvas) !important;
+  --page-foreground-color: var(--lems-ink) !important;
+  --page-link-color: var(--lems-teal) !important;
+  --page-visited-link-color: var(--lems-teal-dark) !important;
+  --page-external-link-color: var(--lems-teal-dark) !important;
+  --header-background-color: var(--lems-surface) !important;
+  --header-separator-color: var(--lems-rule) !important;
+  --group-header-separator-color: var(--lems-rule) !important;
+  --group-header-color: var(--lems-navy) !important;
+  --footer-foreground-color: var(--lems-ink-muted) !important;
+  --title-background-color: var(--lems-surface) !important;
+  --title-separator-color: var(--lems-rule) !important;
+  --blockquote-background-color: var(--lems-mint) !important;
+  --blockquote-border-color: var(--lems-rule-strong) !important;
+  --memdecl-background-color: var(--lems-code) !important;
+  --memdecl-foreground-color: var(--lems-ink) !important;
+  --memdecl-template-color: var(--lems-ink-muted) !important;
+  --memdecl-border-color: var(--lems-rule) !important;
+  --memdef-border-color: var(--lems-rule) !important;
+  --memdef-title-background-color: var(--lems-surface-raised) !important;
+  --memdef-proto-background-color: var(--lems-code) !important;
+  --memdef-proto-text-color: var(--lems-ink) !important;
+  --memdef-param-name-color: var(--lems-teal-dark) !important;
+  --memdef-template-color: var(--lems-ink-muted) !important;
+  --table-cell-border-color: var(--lems-rule) !important;
+  --table-header-background-color: var(--lems-code) !important;
+  --table-header-foreground-color: var(--lems-ink) !important;
+  --label-background-color: var(--lems-mint) !important;
+  --label-left-top-border-color: var(--lems-rule-strong) !important;
+  --label-right-bottom-border-color: var(--lems-rule-strong) !important;
+  --label-foreground-color: var(--lems-teal-dark) !important;
+  --nav-background-color: var(--lems-surface) !important;
+  --nav-foreground-color: var(--lems-ink) !important;
+  --nav-border-color: var(--lems-rule) !important;
+  --nav-breadcrumb-separator-color: var(--lems-rule) !important;
+  --nav-breadcrumb-active-bg: var(--lems-mint) !important;
+  --nav-breadcrumb-color: var(--lems-ink-muted) !important;
+  --nav-splitbar-bg-color: var(--lems-rule) !important;
+  --nav-splitbar-handle-color: var(--lems-rule-strong) !important;
+  --nav-text-normal-color: var(--lems-ink-muted) !important;
+  --nav-menu-button-color: var(--lems-ink) !important;
+  --nav-menu-background-color: var(--lems-surface) !important;
+  --nav-menu-foreground-color: var(--lems-ink) !important;
+  --nav-menu-active-bg: var(--lems-mint) !important;
+  --nav-menu-active-color: var(--lems-teal-dark) !important;
+  --nav-arrow-color: var(--lems-teal) !important;
+  --nav-arrow-selected-color: var(--lems-teal-dark) !important;
+  --toc-background-color: var(--lems-surface-raised) !important;
+  --toc-border-color: var(--lems-rule) !important;
+  --toc-header-color: var(--lems-ink) !important;
+  --search-background-color: var(--lems-surface) !important;
+  --search-foreground-color: var(--lems-ink) !important;
+  --search-active-color: var(--lems-ink) !important;
+  --search-filter-background-color: var(--lems-surface) !important;
+  --search-filter-foreground-color: var(--lems-ink) !important;
+  --search-results-background-color: var(--lems-surface) !important;
+  --search-results-foreground-color: var(--lems-ink) !important;
+  --search-results-border-color: var(--lems-rule-strong) !important;
+  --search-box-border-color: var(--lems-rule-strong) !important;
+  --fragment-foreground-color: var(--lems-ink) !important;
+  --fragment-background-color: var(--lems-code) !important;
+  --fragment-border-color: var(--lems-rule) !important;
+  --fragment-lineno-border-color: var(--lems-rule-strong) !important;
+  --fragment-lineno-background-color: var(--lems-code) !important;
+  --fragment-lineno-foreground-color: var(--lems-ink-muted) !important;
+  --fragment-lineno-link-fg-color: var(--lems-teal) !important;
+  --fragment-lineno-link-bg-color: var(--lems-code) !important;
+  --fragment-lineno-link-hover-fg-color: var(--lems-teal-dark) !important;
+  --fragment-lineno-link-hover-bg-color: var(--lems-mint) !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 280px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--lems-canvas);
+  color: var(--lems-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.58;
+  text-rendering: optimizeLegibility;
+}
+
+body,
+table,
+div,
+p,
+dl,
+dt,
+dd {
+  font-size: inherit;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+a {
+  color: var(--lems-teal);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+}
+
+a:hover {
+  color: var(--lems-teal-dark);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--lems-focus);
+  outline-offset: 3px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Header / project identity ------------------------------------------------ */
+
+#top {
+  min-width: 0;
+  background: var(--lems-surface);
+}
+
+#titlearea {
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid var(--lems-rule);
+  background: var(--lems-surface);
+}
+
+#titlearea > .lems-doc-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: var(--lems-content-width);
+  margin: 0 auto;
+  padding: 1rem 2rem 0.3rem;
+}
+
+.lems-brand-mark {
+  display: grid;
+  flex: 0 0 2.15rem;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, rgba(91, 206, 198, 0.95), rgba(37, 121, 139, 0.95));
+  box-shadow: 0 3px 10px rgba(7, 91, 97, 0.2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.lems-brand-name {
+  color: var(--lems-navy);
+  font-size: 1.05rem;
+  font-weight: 760;
+  letter-spacing: -0.01em;
+}
+
+.lems-lab-subtitle {
+  color: var(--lems-ink-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#titlearea .doktitle,
+#titlearea .title,
+#titlearea table {
+  max-width: var(--lems-content-width);
+}
+
+#titlearea .doktitle {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.35rem 2rem 1rem;
+}
+
+#titlearea #projectname,
+#titlearea .title {
+  color: var(--lems-navy);
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+
+#titlearea #projectname {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+#titlearea #projectname::before {
+  display: inline-grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 5px;
+  background: linear-gradient(135deg, rgba(91, 206, 198, 0.95), rgba(37, 121, 139, 0.95));
+  box-shadow: 0 3px 9px rgba(7, 91, 97, 0.2);
+  color: #fff;
+  content: "ld";
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#titlearea #projectbrief,
+#titlearea .projectbrief {
+  color: var(--lems-ink-muted);
+  font-size: 0.92rem;
+}
+
+#titlearea #projectnumber {
+  color: var(--lems-ink-muted);
+  font-size: 0.76rem;
+}
+
+#projectlogo img {
+  max-height: 3.25rem;
+}
+
+/* A few generated Doxygen surfaces have their own selectors in addition to
+ * the variable-driven rules above. Keep those surfaces legible in both modes. */
+#titlearea #projectname,
+#titlearea #projectname a,
+div.header,
+div.headertitle,
+#nav-tree,
+#nav-tree-contents,
+.memtitle,
+address.footer,
+hr.footer {
+  background-color: var(--lems-surface) !important;
+  color: var(--lems-ink) !important;
+}
+
+address.footer,
+hr.footer {
+  border-color: var(--lems-rule) !important;
+}
+
+html[data-lems-theme="dark"] #page-nav,
+html[data-lems-theme="dark"] #page-nav-contents {
+  background: var(--lems-surface) !important;
+  color: var(--lems-ink) !important;
+}
+
+html[data-lems-theme="dark"] #page-nav {
+  border-left-color: var(--lems-rule) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-lems-theme="light"]) #page-nav,
+  html:not([data-lems-theme="light"]) #page-nav-contents {
+    background: var(--lems-surface) !important;
+    color: var(--lems-ink) !important;
+  }
+
+  html:not([data-lems-theme="light"]) #page-nav {
+    border-left-color: var(--lems-rule) !important;
+  }
+}
+
+#main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 3.05rem;
+  border-bottom: 1px solid var(--lems-navy-deep);
+  background: var(--lems-nav);
+  box-shadow: 0 4px 12px rgba(8, 24, 39, 0.16);
+}
+
+#main-nav-mobile {
+  display: none;
+  background: var(--lems-nav);
+}
+
+#main-nav-mobile .sm-dox,
+#main-nav > #main-menu,
+#main-nav > ul.sm-dox {
+  background: var(--lems-nav);
+}
+
+#main-nav-wrapper,
+#main-nav > .tabs,
+#main-nav > ul {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: var(--lems-content-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+#main-nav > #main-menu {
+  width: 100%;
+}
+
+#main-menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+#main-menu > ul,
+#main-menu > .sm-dox,
+#main-menu > .tablist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lems-nav-tools {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+}
+
+#main-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+#main-menu > li > a,
+#main-menu > ul > li > a,
+#main-menu > .sm-dox > li > a,
+#main-menu > .tablist > li > a {
+  display: inline-block;
+  padding: 0.72rem 0.68rem;
+  border-bottom: 2px solid transparent;
+  color: #e8f5f5;
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#main-menu > li > a:hover,
+#main-menu > li > a:focus-visible,
+#main-menu > ul > li > a:hover,
+#main-menu > ul > li > a:focus-visible,
+#main-menu > .sm-dox > li > a:hover,
+#main-menu > .sm-dox > li > a:focus-visible,
+#main-menu .tablist .current > a,
+#main-menu .sm-dox > li > a.current {
+  border-bottom-color: #6bd3cc;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#main-menu ul {
+  background: var(--lems-surface);
+  border: 1px solid var(--lems-rule);
+  border-radius: 5px;
+  box-shadow: var(--lems-shadow);
+}
+
+#main-menu ul a,
+#main-menu ul a:active,
+#main-menu ul a:focus,
+#main-menu ul a:hover {
+  padding: 0.48rem 0.7rem;
+  border-bottom-color: transparent;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--lems-ink);
+}
+
+#main-menu ul a:hover,
+#main-menu ul a:focus-visible {
+  background: var(--lems-mint);
+  color: var(--lems-teal-dark);
+}
+
+#lems-theme-toggle {
+  flex: 0 0 auto;
+  min-height: 2rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(221, 245, 243, 0.42);
+  border-radius: 999px;
+  background: transparent;
+  color: #e8f5f5;
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+#lems-theme-toggle:hover {
+  border-color: #8de4dd;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Search ------------------------------------------------------------------- */
+
+#MSearchBox {
+  display: flex;
+  align-items: center;
+  width: min(100%, 18rem);
+  min-height: 2.1rem;
+  margin: 0.45rem 0;
+  border: 1px solid var(--lems-rule-strong);
+  border-radius: 5px;
+  background: var(--lems-surface);
+  box-shadow: none;
+}
+
+#MSearchBox .left,
+#MSearchBox .right,
+#MSearchBox .MSearchBoxSelect {
+  background: transparent;
+}
+
+#MSearchField {
+  width: 100%;
+  min-width: 0;
+  padding: 0.32rem 0.6rem;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--lems-ink);
+  font-size: 0.84rem;
+}
+
+#MSearchField::placeholder {
+  color: var(--lems-ink-muted);
+}
+
+#MSearchBox .right {
+  display: flex;
+  align-items: center;
+  padding-right: 0.35rem;
+}
+
+#MSearchBox .right img {
+  opacity: 0.7;
+}
+
+#MSearchSelectWindow,
+#MSearchResultsWindow {
+  z-index: 50;
+  border: 1px solid var(--lems-rule-strong);
+  border-radius: var(--lems-radius);
+  background: var(--lems-surface);
+  box-shadow: var(--lems-shadow);
+  color: var(--lems-ink);
+}
+
+#MSearchResults {
+  background: var(--lems-surface);
+  color: var(--lems-ink);
+}
+
+#MSearchResults .SRPage,
+#MSearchResults .SREntry {
+  padding: 0.45rem 0.65rem;
+}
+
+#MSearchResults .SREntry:hover {
+  background: var(--lems-mint);
+}
+
+/* Breadcrumbs / two-column reference layout ------------------------------- */
+
+#nav-path {
+  max-width: none;
+  margin: 0 0 0 280px;
+  padding: 0.65rem 2rem;
+  border-bottom: 1px solid var(--lems-rule);
+  background: var(--lems-canvas) !important;
+}
+
+#nav-path ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--lems-canvas) !important;
+}
+
+#nav-path li {
+  color: var(--lems-ink-muted) !important;
+  background: var(--lems-canvas) !important;
+}
+
+#nav-path li {
+  font-size: 0.77rem;
+}
+
+#nav-path a,
+#nav-path li.footer {
+  color: var(--lems-teal) !important;
+}
+
+#side-nav {
+  float: left;
+  width: 280px;
+  min-height: calc(100vh - 9.4rem);
+  border-right: 1px solid var(--lems-rule);
+  background: var(--lems-surface);
+  color: var(--lems-ink);
+  overflow: auto;
+  scrollbar-color: var(--lems-rule-strong) transparent;
+}
+
+#nav-tree {
+  padding: 1rem 0.75rem 2rem;
+}
+
+#nav-tree-contents,
+#nav-tree-contents ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#nav-tree-contents ul ul {
+  margin-left: 0.72rem;
+  border-left: 1px solid var(--lems-rule);
+}
+
+#nav-tree-contents .item,
+#nav-tree-contents .label {
+  display: block;
+  padding: 0.22rem 0.55rem;
+  border-radius: 4px;
+  color: var(--lems-ink-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+#nav-tree-contents .item:hover,
+#nav-tree-contents .label:hover,
+#nav-tree-contents .selected {
+  background: var(--lems-mint);
+  color: var(--lems-teal-dark);
+}
+
+#nav-tree-contents a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#nav-tree-contents .arrow {
+  margin-right: 0.25rem;
+  color: var(--lems-teal);
+}
+
+#nav-sync {
+  background: var(--lems-teal);
+}
+
+#doc-content {
+  min-width: 0;
+  max-width: none;
+  min-height: calc(100vh - 9.4rem);
+  margin: 0 0 0 280px;
+  padding: 0 2rem 4rem;
+  background: var(--lems-canvas);
+}
+
+#doc-content > .header,
+#doc-content > .contents,
+#doc-content > .summary {
+  max-width: var(--lems-content-width);
+  min-width: 0;
+}
+
+#doc-content .header {
+  padding-top: 2rem;
+}
+
+div.contents {
+  max-width: 900px;
+  padding: 0;
+}
+
+/* Typography and API member surfaces -------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--lems-navy);
+  line-height: 1.25;
+}
+
+/* Doxygen's light palette hard-codes these API-page colors, so variables
+ * alone cannot override them when the page is toggled dark. */
+h1.groupheader,
+h2.groupheader,
+h3.groupheader {
+  color: var(--lems-navy) !important;
+}
+
+h2.groupheader {
+  box-shadow:
+    12px 0 var(--lems-surface),
+    -12px 0 var(--lems-surface),
+    12px 1px var(--lems-rule),
+    -12px 1px var(--lems-rule) !important;
+}
+
+td h2.groupheader {
+  box-shadow:
+    13px 0 var(--lems-surface),
+    -13px 0 var(--lems-surface),
+    13px 1px var(--lems-rule),
+    -13px 1px var(--lems-rule) !important;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--lems-rule);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+h3 {
+  margin: 1.45rem 0 0.55rem;
+  font-size: 1.08rem;
+}
+
+h4 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.96rem;
+}
+
+p {
+  margin: 0.65rem 0 1rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--lems-rule);
+}
+
+.textblock,
+.memdoc,
+.groupHeader,
+.memproto,
+.memname,
+.paramname,
+.paramtype,
+.mlabel,
+.mdescLeft,
+.mdescRight,
+.memItemLeft,
+.memItemRight,
+table.memberdecls,
+table.fieldtable,
+table.params {
+  color: var(--lems-ink);
+}
+
+.textblock code,
+code,
+tt {
+  padding: 0.08em 0.28em;
+  border: 1px solid var(--lems-rule);
+  border-radius: 3px;
+  background: var(--lems-code);
+  color: var(--lems-teal-dark);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.88em;
+}
+
+pre,
+div.fragment,
+div.code {
+  position: relative;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--lems-rule);
+  border-left: 3px solid var(--lems-teal);
+  border-radius: var(--lems-radius);
+  background: var(--lems-code);
+  color: var(--lems-ink);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  overflow: auto;
+  tab-size: 2;
+}
+
+pre code,
+div.fragment code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+}
+
+div.fragment .line {
+  min-height: 1.4em;
+}
+
+div.line a {
+  color: inherit;
+}
+
+.lineno,
+.line a.lineno {
+  color: var(--lems-ink-muted);
+}
+
+.lems-copy-code {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 1;
+  min-width: 4.2rem;
+  padding: 0.27rem 0.5rem;
+  border: 1px solid var(--lems-rule-strong);
+  border-radius: 4px;
+  background: var(--lems-surface);
+  color: var(--lems-ink-muted);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.lems-copy-code:hover {
+  border-color: var(--lems-teal);
+  color: var(--lems-teal-dark);
+}
+
+.memitem,
+.memdoc,
+.memproto,
+.memberdecls,
+.fieldtable,
+.directory {
+  border-color: var(--lems-rule) !important;
+}
+
+.memitem {
+  margin: 1.15rem 0;
+  border: 1px solid var(--lems-rule);
+  border-radius: var(--lems-radius);
+  background: var(--lems-surface);
+  box-shadow: 0 2px 7px rgba(16, 47, 80, 0.04);
+  overflow: hidden;
+}
+
+.memproto,
+.memname {
+  background: var(--lems-code) !important;
+}
+
+.memproto {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--lems-rule);
+}
+
+.memdoc {
+  padding: 0.72rem 0.95rem 0.9rem;
+  background: var(--lems-surface);
+}
+
+.memdoc p:last-child {
+  margin-bottom: 0;
+}
+
+.memberdecls {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--lems-rule);
+  border-radius: var(--lems-radius);
+  background: var(--lems-surface);
+  overflow: hidden;
+}
+
+.memberdecls td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--lems-rule);
+}
+
+.memberdecls tr:last-child td {
+  border-bottom: 0;
+}
+
+.memberdecls .memItemLeft,
+.memberdecls .memItemRight {
+  background: transparent;
+}
+
+#doc-content a.el,
+#doc-content a.el:visited {
+  color: var(--lems-api-link) !important;
+}
+
+#doc-content a.el:hover,
+#doc-content a.el:focus-visible {
+  color: var(--lems-api-link-hover) !important;
+}
+
+.mlabel {
+  border-radius: 3px;
+  background: var(--lems-mint);
+  color: var(--lems-teal-dark);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+table.params,
+table.mlabels,
+table.fieldtable {
+  width: 100%;
+  margin: 0.8rem 0;
+  border-collapse: collapse;
+}
+
+table.params td,
+table.mlabels td,
+table.fieldtable td,
+table.fieldtable th {
+  padding: 0.42rem 0.55rem;
+  border-bottom: 1px solid var(--lems-rule);
+  vertical-align: top;
+  text-align: left;
+}
+
+table.fieldtable th {
+  background: var(--lems-code);
+  color: var(--lems-navy);
+  font-weight: 700;
+}
+
+.summary,
+.top,
+.bottom {
+  color: var(--lems-ink-muted);
+}
+
+.summary a {
+  color: var(--lems-teal);
+}
+
+.anchor {
+  scroll-margin-top: 6rem;
+}
+
+/* Homepage/content-worker contract ---------------------------------------- */
+
+.lems-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin: 0 0 1.6rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--lems-rule);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(91, 206, 198, 0.17), transparent 42%),
+    var(--lems-surface);
+  box-shadow: var(--lems-shadow);
+}
+
+.lems-eyebrow,
+.lems-card-kicker,
+.lems-metric-label {
+  color: var(--lems-teal-dark);
+  font-size: 0.7rem;
+  font-weight: 780;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lems-hero h1,
+.lems-hero h2,
+.lems-hero h3 {
+  margin-top: 0.35rem;
+  border: 0;
+}
+
+.lems-hero-copy {
+  max-width: 52rem;
+}
+
+.lems-hero-aside {
+  align-self: stretch;
+  padding: 1rem;
+  border: 1px solid var(--lems-rule);
+  border-radius: var(--lems-radius);
+  background: var(--lems-surface-raised);
+}
+
+.lems-card-grid,
+.module-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.85rem;
+  margin: 1.2rem 0;
+}
+
+.lems-card,
+.module-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--lems-rule);
+  border-radius: var(--lems-radius);
+  background: var(--lems-surface);
+  box-shadow: 0 2px 7px rgba(16, 47, 80, 0.04);
+}
+
+.lems-card h2,
+.lems-card h3,
+.module-card h2,
+.module-card h3,
+.lems-card-title {
+  margin: 0.35rem 0 0.4rem;
+  padding: 0;
+  border: 0;
+  color: var(--lems-navy);
+  font-size: 1.02rem;
+}
+
+.lems-card-copy {
+  margin: 0 0 0.8rem;
+  color: var(--lems-ink-muted);
+}
+
+.lems-card-link {
+  margin-top: auto;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.lems-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.lems-metric {
+  padding: 0.8rem 0.9rem;
+  border-left: 3px solid var(--lems-teal);
+  background: var(--lems-surface);
+}
+
+.lems-metric-value {
+  display: block;
+  color: var(--lems-navy);
+  font-size: 1.35rem;
+  font-weight: 760;
+  line-height: 1.15;
+}
+
+.lems-callout {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--lems-teal);
+  border-radius: 0 var(--lems-radius) var(--lems-radius) 0;
+  background: var(--lems-mint);
+}
+
+.lems-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.45rem;
+  border: 1px solid var(--lems-rule-strong);
+  border-radius: 999px;
+  background: var(--lems-surface-raised);
+  color: var(--lems-teal-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* Mobile / narrow content -------------------------------------------------- */
+
+@media (max-width: 960px) {
+  #titlearea > .lems-doc-brand,
+  #titlearea .doktitle,
+  #main-nav-wrapper,
+  #main-nav > .tabs,
+  #main-nav > ul,
+  #nav-path,
+  #doc-content {
+    padding-right: 1.15rem;
+    padding-left: 1.15rem;
+  }
+
+  #nav-path {
+    margin-left: 0 !important;
+  }
+
+  #main-nav-wrapper,
+  #main-nav > .tabs,
+  #main-nav > ul {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  #main-menu {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .lems-nav-tools {
+    flex: 1 1 100%;
+    order: 0;
+    justify-content: flex-end;
+  }
+
+  #main-menu,
+  #main-menu > ul,
+  #main-menu > .sm-dox,
+  #main-menu > .tablist {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: thin;
+  }
+
+  #MSearchBox {
+    order: 0;
+    margin-left: auto;
+  }
+
+  #side-nav {
+    float: none;
+    width: 100% !important;
+    min-height: 0;
+    max-height: 17rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--lems-rule);
+  }
+
+  #nav-tree {
+    padding: 0.65rem 1.15rem 0.9rem;
+  }
+
+  #doc-content {
+    min-height: 0;
+    margin: 0 !important;
+    padding-top: 0.25rem;
+  }
+
+  .lems-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  #side-nav {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+  }
+
+  #page-nav.page-nav-panel {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+  }
+
+  #container {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #doc-content {
+    width: 100% !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #main-nav-mobile {
+    display: block;
+  }
+
+  #main-nav {
+    min-height: 0;
+    border-bottom: 0;
+    box-shadow: none;
+  }
+
+  #main-nav-mobile .sm-dox {
+    padding: 0.3rem 1.15rem;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    font-size: 14px;
+  }
+
+  #titlearea > .lems-doc-brand {
+    padding-top: 0.8rem;
+  }
+
+  .lems-lab-subtitle {
+    display: block;
+    margin-top: 0.1rem;
+    font-size: 0.66rem;
+  }
+
+  #titlearea .doktitle {
+    padding-top: 0.25rem;
+    padding-bottom: 0.8rem;
+  }
+
+  #main-nav-wrapper,
+  #main-nav > .tabs,
+  #main-nav > ul {
+    gap: 0.35rem;
+  }
+
+  #main-menu > li > a,
+  #main-menu > ul > li > a,
+  #main-menu > .sm-dox > li > a,
+  #main-menu > .tablist > li > a {
+    padding: 0.58rem 0.45rem;
+    font-size: 0.76rem;
+  }
+
+  #MSearchBox {
+    width: 100%;
+    margin: 0.4rem 0 0;
+  }
+
+  #lems-theme-toggle {
+    margin: 0.4rem 0 0;
+  }
+
+  #nav-path {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  #doc-content {
+    padding-bottom: 2.5rem;
+  }
+
+  .memproto,
+  .memdoc,
+  div.fragment,
+  div.code,
+  pre {
+    padding-right: 0.7rem;
+    padding-left: 0.7rem;
+  }
+
+  table.memberdecls,
+  table.params,
+  table.fieldtable {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media print {
+  #main-nav,
+  #side-nav,
+  #nav-path,
+  #lems-theme-toggle,
+  .lems-copy-code {
+    display: none !important;
+  }
+
+  #doc-content {
+    margin: 0;
+    padding: 0;
+  }
+
+  .memitem,
+  .lems-card,
+  .lems-hero {
+    box-shadow: none;
+  }
+}
