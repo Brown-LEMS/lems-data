@@ -51,7 +51,7 @@ not a separate hand-written header parser.
 ## GitHub Pages deployment
 
 `.github/workflows/docs.yml` builds and checks the site on pushes to `main` or
-`codex/cohesive-edge-library`, and on manual `workflow_dispatch`. It installs
+`jh_dev`, and on manual `workflow_dispatch`. It installs
 Doxygen on the hosted runner, writes generated files under the runner's
 ephemeral temporary directory, validates the generated HTML, and uploads only
 the generated `html/` tree through the official GitHub Pages artifact and
